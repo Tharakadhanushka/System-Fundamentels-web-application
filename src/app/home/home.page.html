@@ -1,0 +1,84 @@
+<app-header></app-header>
+
+<ion-content padding>
+
+  <div style="margin-left: 5%;" >
+    <ion-chip color="tertiary"  size="large" padding >
+        <ion-icon name="trash" size="large"></ion-icon>
+        <ion-title>{{ trashDataInfo }}</ion-title>
+    </ion-chip> 
+    <ion-chip color="danger"  size="large" *ngIf="locationStatus === 'offline' || locationStatus === null" padding >
+        <ion-icon name="warning" size="large"></ion-icon>
+        <ion-title>Selected device is Offline</ion-title>
+    </ion-chip>          
+
+  </div>
+
+  <div id="map_canvas" style="float: left;" >
+    
+  </div>
+  
+  <div style="
+  float: right;
+  margin-right: 2%;
+  margin-left: 2%;" *ngIf="!isChkDriverRecords" >
+
+    <ion-list >
+    <ion-card *ngFor="let m of deviceDataArray" padding id="m.id" [ngStyle]="{'border-style':locationDeviceID === m.id ? 'solid' : 'none' }">
+        <div>
+            <ion-card-header>
+              <ion-card-subtitle> ID : {{ m.id }}  </ion-card-subtitle>
+              </ion-card-header>
+    
+    <ion-card-content [ngStyle]="{'color':m.status === 'offline' ? 'red' : 'green' }" > <ion-icon name="phone-portrait"></ion-icon> {{ m.status}} </ion-card-content>
+      
+    <ion-button  size="small" (click)="loadPositionOfDriver(m.id)" *ngIf="!isTracking">
+    <ion-icon name="logo-model-s"></ion-icon>&nbsp; Watch</ion-button>
+    <ion-button size="small" color="danger" (click)="stopTrackingVehicle()" *ngIf="isTracking && locationDeviceID === m.id ">
+                <ion-icon name="hand">
+                </ion-icon>&nbsp; Stop</ion-button>
+    &nbsp;
+    <ion-button size="small" color="secondary" (click)="loadDriversRecords(m.id)">
+      <ion-icon name="locate">
+    </ion-icon> &nbsp;Veiw Records</ion-button>
+    &nbsp;
+    <ion-button size="small" color="light" (click)="removeDriver(m.id)" >
+      <ion-icon name="person">
+    </ion-icon> &nbsp;Remove Driver</ion-button>
+        </div>
+      </ion-card>
+    </ion-list>
+
+  </div>
+  <div style="
+  float: left;
+  margin-right: 0.5%;
+  margin-left: 1%;"  *ngIf="isChkDriverRecords">
+
+  <ion-card padding>
+    <div>
+        <ion-card-header><ion-icon size="large" name="calendar"></ion-icon>
+          <ion-card-title color="dark" >{{chkingDate}}</ion-card-title>
+          <ion-card-subtitle> ID : {{ dRecordID }}  </ion-card-subtitle>
+          <ion-chip color="primary"  size="small" padding >
+              <ion-icon name="bookmark" size="small"></ion-icon>
+              <ion-title>{{ dRecordTotalTrash }}</ion-title>
+          </ion-chip>  
+        </ion-card-header>
+       
+      <ion-button size="small" color="tertiary" (click)="unloadDriversRecords()">
+      <ion-icon name="exit"></ion-icon> &nbsp;Back</ion-button>
+      &nbsp;
+      <ion-button size="small" color="light" (click)="removeDriver(m.id)" >
+      <ion-icon name="person"></ion-icon> &nbsp;Remove Driver</ion-button>
+    </div>
+  </ion-card>
+  <ion-list >
+    <ion-item *ngFor="let t of driverRecordsDatesArr" >
+      <ion-icon name="calendar"></ion-icon>
+      <ion-label>{{ t }} </ion-label>
+      <ion-button size="small" color="primary" (click)="loadDriversRecords( dRecordID , t )" > Select</ion-button>
+    </ion-item>
+  </ion-list>
+  </div>
+</ion-content>
